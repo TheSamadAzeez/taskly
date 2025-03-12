@@ -1,12 +1,20 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { theme } from './theme';
 
 export default function App() {
   return (
     <View style={styles.container}>
+      {/* header section */}
       <View style={styles.itemContainer}>
         <Text style={styles.itemText}>Coffee</Text>
+        {/* button */}
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => console.log('pressed')}
+          activeOpacity={0.7}
+        >
+          <Text style={styles.buttonText}>Delete</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -25,6 +33,23 @@ const styles = StyleSheet.create({
     borderBottomColor: theme.colorCerulean,
     paddingHorizontal: 8,
     paddingVertical: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
-  itemText: { fontSize: 18, fontWeight: '200' },
+  itemText: {
+    fontSize: 18,
+    fontWeight: '200',
+  },
+  button: {
+    backgroundColor: theme.colorBlack,
+    padding: 8,
+    borderRadius: 6,
+  },
+  buttonText: {
+    color: theme.colorWhite,
+    fontWeight: 'bold',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
+  },
 });
