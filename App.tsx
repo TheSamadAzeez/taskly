@@ -1,7 +1,21 @@
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Alert, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { theme } from './theme';
 
 export default function App() {
+  const handleDe1ete = () => {
+    Alert.alert(
+      'Are you sure you want to delete this?',
+      "You can't undo this",
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Delete',
+          onPress: () => console.log('deleting...'),
+          style: 'destructive',
+        },
+      ]
+    );
+  };
   return (
     <View style={styles.container}>
       {/* header section */}
@@ -10,7 +24,7 @@ export default function App() {
         {/* button */}
         <TouchableOpacity
           style={styles.button}
-          onPress={() => console.log('pressed')}
+          onPress={handleDe1ete}
           activeOpacity={0.7}
         >
           <Text style={styles.buttonText}>Delete</Text>
