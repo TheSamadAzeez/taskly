@@ -1,7 +1,12 @@
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../theme";
 
-function ShoppingListItems({ name }: { name: string }) {
+type Props = {
+  name: string;
+  isCompleted?: boolean;
+};
+
+function ShoppingListItems({ name, isCompleted }: Props) {
   const handleDe1ete = () => {
     Alert.alert(
       `Are you sure you want to delete ${name}?`,
@@ -17,11 +22,26 @@ function ShoppingListItems({ name }: { name: string }) {
     );
   };
   return (
-    <View style={styles.itemContainer}>
-      <Text style={styles.itemText}>{name}</Text>
+    <View
+      style={[
+        styles.itemContainer,
+        isCompleted ? styles.completedContainer : undefined,
+      ]}
+    >
+      <Text
+        style={[
+          styles.itemText,
+          isCompleted ? styles.completedText : undefined,
+        ]}
+      >
+        {name}
+      </Text>
       {/* button */}
       <TouchableOpacity
-        style={styles.button}
+        style={[
+          styles.button,
+          isCompleted ? styles.completedButton : undefined,
+        ]}
         onPress={handleDe1ete}
         activeOpacity={0.7}
       >
@@ -48,14 +68,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  completedContainer: {
+    backgroundColor: theme.colorLightGrey,
+    borderBottomColor: theme.colorLightGrey,
+  },
   itemText: {
     fontSize: 18,
     fontWeight: "200",
+    textTransform: "capitalize",
+  },
+  completedText: {
+    textDecorationLine: "line-through",
+    textDecorationColor: theme.colorGrey,
+    color: theme.colorGrey,
   },
   button: {
     backgroundColor: theme.colorBlack,
     padding: 8,
     borderRadius: 6,
+  },
+  completedButton: {
+    backgroundColor: theme.colorGrey,
   },
   buttonText: {
     color: theme.colorWhite,
