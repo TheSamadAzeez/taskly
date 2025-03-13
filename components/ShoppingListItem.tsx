@@ -1,5 +1,6 @@
 import { Alert, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { theme } from "../theme";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 type Props = {
   name: string;
@@ -36,16 +37,13 @@ function ShoppingListItems({ name, isCompleted }: Props) {
       >
         {name}
       </Text>
-      {/* button */}
-      <TouchableOpacity
-        style={[
-          styles.button,
-          isCompleted ? styles.completedButton : undefined,
-        ]}
-        onPress={handleDe1ete}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.buttonText}>Delete</Text>
+      {/* delete button */}
+      <TouchableOpacity onPress={handleDe1ete} activeOpacity={0.7}>
+        <MaterialIcons
+          name="delete"
+          size={20}
+          color={isCompleted ? theme.colorGrey : theme.colorRed}
+        />
       </TouchableOpacity>
     </View>
   );
@@ -53,12 +51,6 @@ function ShoppingListItems({ name, isCompleted }: Props) {
 
 // styles for the App component
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: theme.colorWhite,
-    justifyContent: "center",
-    padding: 20,
-  },
   itemContainer: {
     borderBottomWidth: 1,
     borderBottomColor: theme.colorCerulean,
@@ -81,20 +73,6 @@ const styles = StyleSheet.create({
     textDecorationLine: "line-through",
     textDecorationColor: theme.colorGrey,
     color: theme.colorGrey,
-  },
-  button: {
-    backgroundColor: theme.colorBlack,
-    padding: 8,
-    borderRadius: 6,
-  },
-  completedButton: {
-    backgroundColor: theme.colorGrey,
-  },
-  buttonText: {
-    color: theme.colorWhite,
-    fontWeight: "bold",
-    textTransform: "uppercase",
-    letterSpacing: 1,
   },
 });
 
