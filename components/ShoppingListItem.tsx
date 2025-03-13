@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
   itemContainer: {
     borderBottomWidth: 1,
     borderBottomColor: theme.colorCerulean,
-    paddingHorizontal: 8,
+    paddingHorizontal: 10,
     paddingVertical: 16,
     flexDirection: "row",
     alignItems: "center",
