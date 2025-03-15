@@ -6,7 +6,12 @@ import { theme } from "../theme";
 
 function Layout() {
   return (
-    <Tabs screenOptions={{ tabBarActiveTintColor: theme.colorCerulean }}>
+    <Tabs
+      screenOptions={{
+        tabBarHideOnKeyboard: true,
+        tabBarActiveTintColor: theme.colorCerulean,
+      }}
+    >
       {/* index tab */}
       <Tabs.Screen
         name="index"
