@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, TextInput } from "react-native";
+import { View, StyleSheet, TextInput, FlatList } from "react-native";
 import { theme } from "../theme";
 import ShoppingListItem from "../components/ShoppingListItem";
 import { useState } from "react";
@@ -35,11 +35,7 @@ export default function App() {
   };
 
   return (
-    <ScrollView
-      style={styles.container}
-      contentContainerStyle={styles.contentContainer}
-      stickyHeaderIndices={[0]}
-    >
+    <View style={styles.container}>
       {/* input field to add new shopping item */}
       <TextInput
         style={styles.textInput}
@@ -49,15 +45,17 @@ export default function App() {
         returnKeyType="done"
         onSubmitEditing={handleSubmit}
       />
-      {/* render the list of shopping items */}
-      {shoppingList.map((item) => (
-        <ShoppingListItem
-          key={item.id}
-          name={item.name}
-          isCompleted={item.isCompleted}
-        />
-      ))}
-    </ScrollView>
+      <FlatList
+        style={styles.container}
+        data={shoppingList} // data to render
+        renderItem={({ item }) => {
+          return (
+            // render the list of shopping items
+            <ShoppingListItem name={item.name} isCompleted={item.isCompleted} />
+          );
+        }}
+      />
+    </View>
   );
 }
 
@@ -66,16 +64,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colorWhite,
-    // justifyContent: "center",
     padding: 12,
-  },
-  contentContainer: {
-    paddingBottom: 24,
   },
   textInput: {
     borderColor: theme.colorLightGrey,
     borderWidth: 2,
-    padding: 10,
+    padding: 15,
     marginBottom: 12,
     fontSize: 18,
     borderRadius: 50,
