@@ -5,9 +5,10 @@ import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 type Props = {
   name: string;
   isCompleted?: boolean;
+  onDelete: () => void;
 };
 
-function ShoppingListItems({ name, isCompleted }: Props) {
+function ShoppingListItems({ name, isCompleted, onDelete }: Props) {
   const handleDe1ete = () => {
     Alert.alert(
       `Are you sure you want to delete ${name}?`,
@@ -16,7 +17,7 @@ function ShoppingListItems({ name, isCompleted }: Props) {
         { text: "Cancel", style: "cancel" },
         {
           text: "Delete",
-          onPress: () => console.log("deleting..."),
+          onPress: () => onDelete(),
           style: "destructive",
         },
       ],

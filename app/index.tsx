@@ -34,6 +34,11 @@ export default function App() {
     }
   }, [shoppingList, value]);
 
+  const handleDelete = (id: string) => {
+    const newShoppingList = shoppingList.filter((item) => item.id !== id);
+    setShoppingList(newShoppingList);
+  };
+
   const renderListHeader = useMemo(() => {
     return (
       // input field to add new shopping item
@@ -52,6 +57,7 @@ export default function App() {
     //* list of shopping items
     <FlatList
       style={styles.container}
+      contentContainerStyle={styles.containerStyle}
       data={shoppingList} // data to render
       stickyHeaderIndices={[0]}
       ListEmptyComponent={
@@ -65,7 +71,11 @@ export default function App() {
       renderItem={({ item }) => {
         return (
           // render the list of shopping items
-          <ShoppingListItem name={item.name} isCompleted={item.isCompleted} />
+          <ShoppingListItem
+            name={item.name}
+            isCompleted={item.isCompleted}
+            onDelete={() => handleDelete(item.id)}
+          />
         );
       }}
     />
@@ -78,6 +88,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colorWhite,
     padding: 12,
+  },
+  containerStyle: {
+    paddingBottom: 24,
   },
   listEmptyContainer: {
     justifyContent: "center",
