@@ -45,6 +45,8 @@ export default function App() {
         returnKeyType="done"
         onSubmitEditing={handleSubmit}
       />
+
+      {/* list of shopping items */}
       <FlatList
         style={styles.container}
         data={shoppingList} // data to render
