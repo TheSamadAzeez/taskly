@@ -25,6 +25,8 @@ function _layout() {
           },
         }}
       />
+
+      <Stack.Screen name="history" options={{ title: "History" }} />
     </Stack>
   );
 }
