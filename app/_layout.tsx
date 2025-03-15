@@ -7,6 +7,7 @@ import { theme } from "../theme";
 function Layout() {
   return (
     <Tabs screenOptions={{ tabBarActiveTintColor: theme.colorCerulean }}>
+      {/* index tab */}
       <Tabs.Screen
         name="index"
         options={{
@@ -16,15 +17,18 @@ function Layout() {
           ),
         }}
       />
+      {/* counter tab */}
       <Tabs.Screen
         name="counter"
         options={{
           title: "Counter",
+          headerShown: false, // hide the header
           tabBarIcon: ({ color, size }) => (
             <AntDesign name="clockcircleo" size={size} color={color} />
           ),
         }}
       />
+      {/* idea tab */}
       <Tabs.Screen
         name="idea"
         options={{
