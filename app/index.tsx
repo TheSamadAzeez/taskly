@@ -21,6 +21,7 @@ export default function App() {
   const [shoppingList, setShoppingList] = useState(initialList);
   const [value, setValue] = useState("");
 
+  // function to hans=dle submit submit event
   const handleSubmit = useCallback(() => {
     if (value) {
       const newShoppingList: ShoppingListItemType[] = [
@@ -35,6 +36,7 @@ export default function App() {
 
   const renderListHeader = useMemo(() => {
     return (
+      // input field to add new shopping item
       <TextInput
         style={styles.textInput}
         placeholder="E.g. Coffee"
