@@ -1,7 +1,7 @@
-import { View, StyleSheet, TextInput, FlatList } from "react-native";
+import { View, StyleSheet, TextInput, FlatList, Text } from "react-native";
 import { theme } from "../theme";
 import ShoppingListItem from "../components/ShoppingListItem";
-import { useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 // ShoppingListItemType
 type ShoppingListItemType = {
@@ -21,8 +21,7 @@ export default function App() {
   const [shoppingList, setShoppingList] = useState(initialList);
   const [value, setValue] = useState("");
 
-  // function to hans=dle submit submit event
-  const handleSubmit = () => {
+  const handleSubmit = useCallback(() => {
     if (value) {
       const newShoppingList: ShoppingListItemType[] = [
         { id: new Date().toTimeString(), name: value },
@@ -32,11 +31,10 @@ export default function App() {
       setShoppingList(newShoppingList);
       setValue("");
     }
-  };
+  }, [shoppingList, value]);
 
-  return (
-    <View style={styles.container}>
-      {/* input field to add new shopping item */}
+  const renderListHeader = useMemo(() => {
+    return (
       <TextInput
         style={styles.textInput}
         placeholder="E.g. Coffee"
@@ -45,19 +43,30 @@ export default function App() {
         returnKeyType="done"
         onSubmitEditing={handleSubmit}
       />
+    );
+  }, [handleSubmit, value]);
 
-      {/* list of shopping items */}
-      <FlatList
-        style={styles.container}
-        data={shoppingList} // data to render
-        renderItem={({ item }) => {
-          return (
-            // render the list of shopping items
-            <ShoppingListItem name={item.name} isCompleted={item.isCompleted} />
-          );
-        }}
-      />
-    </View>
+  return (
+    //* list of shopping items
+    <FlatList
+      style={styles.container}
+      data={shoppingList} // data to render
+      stickyHeaderIndices={[0]}
+      ListEmptyComponent={
+        <View style={styles.listEmptyContainer}>
+          <Text style={{ textTransform: "capitalize", fontSize: 15 }}>
+            Your shopping list is empty
+          </Text>
+        </View>
+      }
+      ListHeaderComponent={renderListHeader}
+      renderItem={({ item }) => {
+        return (
+          // render the list of shopping items
+          <ShoppingListItem name={item.name} isCompleted={item.isCompleted} />
+        );
+      }}
+    />
   );
 }
 
@@ -67,6 +76,11 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: theme.colorWhite,
     padding: 12,
+  },
+  listEmptyContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    marginVertical: 18,
   },
   textInput: {
     borderColor: theme.colorLightGrey,
