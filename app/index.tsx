@@ -1,20 +1,20 @@
-import { View, StyleSheet, TextInput, FlatList, Text } from "react-native";
-import { theme } from "../theme";
-import ShoppingListItem from "../components/ShoppingListItem";
 import { useCallback, useMemo, useState } from "react";
+import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
+import ShoppingListItem from "../components/ShoppingListItem";
+import { theme } from "../theme";
 
 // ShoppingListItemType
 type ShoppingListItemType = {
   id: string;
   name: string;
-  isCompleted?: boolean;
+  completedAtTimestamp?: number;
 };
 
 // initial list of shopping items (mock data)
 const initialList: ShoppingListItemType[] = [
   { id: "1", name: "coffee" },
   { id: "2", name: "tea" },
-  { id: "3", name: "sugar", isCompleted: true },
+  { id: "3", name: "sugar" },
 ];
 
 export default function App() {
@@ -34,8 +34,25 @@ export default function App() {
     }
   }, [shoppingList, value]);
 
+  // function to handle delete event
   const handleDelete = (id: string) => {
     const newShoppingList = shoppingList.filter((item) => item.id !== id);
+    setShoppingList(newShoppingList);
+  };
+
+  // function to handle toggle complete event
+  const handleToggleComplete = (id: string) => {
+    const newShoppingList = shoppingList.map((item) => {
+      if (item.id === id) {
+        return {
+          ...item,
+          completedAtTimestamp: item.completedAtTimestamp
+            ? undefined
+            : Date.now(),
+        };
+      }
+      return item;
+    });
     setShoppingList(newShoppingList);
   };
 
@@ -73,8 +90,9 @@ export default function App() {
           // render the list of shopping items
           <ShoppingListItem
             name={item.name}
-            isCompleted={item.isCompleted}
             onDelete={() => handleDelete(item.id)}
+            onToggleComplete={() => handleToggleComplete(item.id)}
+            isCompleted={Boolean(item.completedAtTimestamp)}
           />
         );
       }}
