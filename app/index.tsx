@@ -1,7 +1,10 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
 import ShoppingListItem from "../components/ShoppingListItem";
 import { theme } from "../theme";
+import { getFromStorage, saveToStorage } from "../utils/storage";
+
+const storageKey = "shopping-list";
 
 // ShoppingListItemType
 type ShoppingListItemType = {
@@ -22,7 +25,18 @@ export default function App() {
   const [shoppingList, setShoppingList] = useState(initialList);
   const [value, setValue] = useState("");
 
-  // function to hans=dle submit submit event
+  useEffect(() => {
+    const fetchInitial = async () => {
+      const data = await getFromStorage(storageKey);
+      // console.log(data);
+      if (data) {
+        setShoppingList(data);
+      }
+    };
+    fetchInitial();
+  }, []);
+
+  // function to handle submit submit event
   const handleSubmit = useCallback(() => {
     if (value) {
       const newShoppingList: ShoppingListItemType[] = [
@@ -35,6 +49,7 @@ export default function App() {
       ];
 
       setShoppingList(newShoppingList);
+      saveToStorage(storageKey, newShoppingList);
       setValue("");
     }
   }, [shoppingList, value]);
@@ -42,6 +57,7 @@ export default function App() {
   // function to handle delete event
   const handleDelete = (id: string) => {
     const newShoppingList = shoppingList.filter((item) => item.id !== id);
+    saveToStorage(storageKey, newShoppingList);
     setShoppingList(newShoppingList);
   };
 
@@ -59,6 +75,7 @@ export default function App() {
       }
       return item;
     });
+    saveToStorage(storageKey, newShoppingList);
     setShoppingList(newShoppingList);
   };
 
