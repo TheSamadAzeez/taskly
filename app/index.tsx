@@ -8,6 +8,7 @@ type ShoppingListItemType = {
   id: string;
   name: string;
   completedAtTimestamp?: number;
+  lastUpdatedTimestamp?: number;
 };
 
 // initial list of shopping items (mock data)
@@ -25,7 +26,11 @@ export default function App() {
   const handleSubmit = useCallback(() => {
     if (value) {
       const newShoppingList: ShoppingListItemType[] = [
-        { id: new Date().toTimeString(), name: value },
+        {
+          id: new Date().toTimeString(),
+          name: value,
+          lastUpdatedTimestamp: Date.now(),
+        },
         ...shoppingList,
       ];
 
@@ -46,6 +51,7 @@ export default function App() {
       if (item.id === id) {
         return {
           ...item,
+          lastUpdatedTimestamp: Date.now(),
           completedAtTimestamp: item.completedAtTimestamp
             ? undefined
             : Date.now(),
@@ -75,7 +81,7 @@ export default function App() {
     <FlatList
       style={styles.container}
       contentContainerStyle={styles.containerStyle}
-      data={shoppingList} // data to render
+      data={orderShoppingList(shoppingList)} // data to render
       stickyHeaderIndices={[0]}
       ListEmptyComponent={
         <View style={styles.listEmptyContainer}>
@@ -102,22 +108,32 @@ export default function App() {
 
 function orderShoppingList(shoppingList: ShoppingListItemType[]) {
   return shoppingList.sort((item1, item2) => {
+    // if both items are completed, sort by completed timestamp in descending order
     if (item1.completedAtTimestamp && item2.completedAtTimestamp) {
       return item2.completedAtTimestamp - item1.completedAtTimestamp;
     }
 
+    // if item1 is completed and item2 is not, item1 should come first
     if (item1.completedAtTimestamp && !item2.completedAtTimestamp) {
       return 1;
     }
 
+    // if item2 is completed and item1 is not, item2 should come first
     if (!item1.completedAtTimestamp && item2.completedAtTimestamp) {
       return -1;
     }
 
+    // if both items are not completed, sort by last updated timestamp in descending order
     if (!item1.completedAtTimestamp && !item2.completedAtTimestamp) {
-      return item2.lastUpdatedTimestamp - item1.lastUpdatedTimestamp;
+      // added a fallback value of 0 in case lastUpdatedTimestamp is undefined
+      const timestamp1 = item1.lastUpdatedTimestamp || 0;
+      const timestamp2 = item2.lastUpdatedTimestamp || 0;
+
+      return timestamp2 - timestamp1;
+      // return item2.lastUpdatedTimestamp - item1.lastUpdatedTimestamp;
     }
 
+    // if both items are not completed and have the same last updated timestamp, sort by name in ascending order
     return 0;
   });
 }
