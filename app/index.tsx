@@ -1,5 +1,14 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { FlatList, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  LayoutAnimation,
+  Platform,
+  UIManager,
+} from "react-native";
 import ShoppingListItem from "../components/ShoppingListItem";
 import { theme } from "../theme";
 import { getFromStorage, saveToStorage } from "../utils/storage";
@@ -21,6 +30,13 @@ const initialList: ShoppingListItemType[] = [
   { id: "3", name: "sugar" },
 ];
 
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
+
 export default function App() {
   const [shoppingList, setShoppingList] = useState(initialList);
   const [value, setValue] = useState("");
@@ -30,6 +46,7 @@ export default function App() {
       const data = await getFromStorage(storageKey);
       // console.log(data);
       if (data) {
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); // animate the list when new item is added
         setShoppingList(data);
       }
     };
@@ -39,6 +56,7 @@ export default function App() {
   // function to handle submit submit event
   const handleSubmit = useCallback(() => {
     if (value) {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); // animate the list when new item is added
       const newShoppingList: ShoppingListItemType[] = [
         {
           id: new Date().toTimeString(),
@@ -56,6 +74,7 @@ export default function App() {
 
   // function to handle delete event
   const handleDelete = (id: string) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); // animate the list when new item is added
     const newShoppingList = shoppingList.filter((item) => item.id !== id);
     saveToStorage(storageKey, newShoppingList);
     setShoppingList(newShoppingList);
@@ -63,6 +82,7 @@ export default function App() {
 
   // function to handle toggle complete event
   const handleToggleComplete = (id: string) => {
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); // animate the list when new item is added
     const newShoppingList = shoppingList.map((item) => {
       if (item.id === id) {
         return {
@@ -147,7 +167,6 @@ function orderShoppingList(shoppingList: ShoppingListItemType[]) {
       const timestamp2 = item2.lastUpdatedTimestamp || 0;
 
       return timestamp2 - timestamp1;
-      // return item2.lastUpdatedTimestamp - item1.lastUpdatedTimestamp;
     }
 
     // if both items are not completed and have the same last updated timestamp, sort by name in ascending order
