@@ -56,8 +56,10 @@ export default function App() {
   // function to handle submit submit event
   const handleSubmit = useCallback(() => {
     if (value) {
-      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); // animate the list when new item is added
-      const newShoppingList: ShoppingListItemType[] = [
+      // Configure animation BEFORE state change
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+      const newShoppingList = [
         {
           id: new Date().toTimeString(),
           name: value,
@@ -74,15 +76,14 @@ export default function App() {
 
   // function to handle delete event
   const handleDelete = (id: string) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); // animate the list when new item is added
     const newShoppingList = shoppingList.filter((item) => item.id !== id);
     saveToStorage(storageKey, newShoppingList);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); // animate the list when new item is added
     setShoppingList(newShoppingList);
   };
 
   // function to handle toggle complete event
   const handleToggleComplete = (id: string) => {
-    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); // animate the list when new item is added
     const newShoppingList = shoppingList.map((item) => {
       if (item.id === id) {
         return {
@@ -96,6 +97,7 @@ export default function App() {
       return item;
     });
     saveToStorage(storageKey, newShoppingList);
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); // animate the list when new item is added
     setShoppingList(newShoppingList);
   };
 
