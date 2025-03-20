@@ -1,17 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   FlatList,
+  LayoutAnimation,
+  Platform,
   StyleSheet,
   Text,
   TextInput,
-  View,
-  LayoutAnimation,
-  Platform,
   UIManager,
+  View,
 } from "react-native";
 import ShoppingListItem from "../components/ShoppingListItem";
 import { theme } from "../theme";
 import { getFromStorage, saveToStorage } from "../utils/storage";
+import * as Haptics from "expo-haptics";
 
 const storageKey = "shopping-list";
 
@@ -30,6 +31,7 @@ const initialList: ShoppingListItemType[] = [
   { id: "3", name: "sugar" },
 ];
 
+// enable layout animation on android
 if (
   Platform.OS === "android" &&
   UIManager.setLayoutAnimationEnabledExperimental
@@ -79,6 +81,7 @@ export default function App() {
     const newShoppingList = shoppingList.filter((item) => item.id !== id);
     saveToStorage(storageKey, newShoppingList);
     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut); // animate the list when new item is added
+    Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
     setShoppingList(newShoppingList);
   };
 
@@ -86,6 +89,14 @@ export default function App() {
   const handleToggleComplete = (id: string) => {
     const newShoppingList = shoppingList.map((item) => {
       if (item.id === id) {
+        // play haptic feedback based on the action (complete or incomplete)
+        if (item.completedAtTimestamp) {
+          // play error haptic feedback if item is uncompleted
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+        } else {
+          // play success haptic feedback if item is completed
+          Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+        }
         return {
           ...item,
           lastUpdatedTimestamp: Date.now(),
